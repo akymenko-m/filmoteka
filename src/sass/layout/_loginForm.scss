@@ -49,12 +49,12 @@ input {
   height: 30px;
   border: none;
   background-color: transparent;
-  
+
   @media screen and (min-width: 768px) {
     right: 12px;
   }
 
-  &:hover .login-modal__close-icon{
+  &:hover .login-modal__close-icon {
     fill: #ff6b08;
   }
 }
@@ -215,7 +215,7 @@ input {
   justify-content: center;
   position: relative;
   color: #1b1b22;
-  // border: 2px solid hsl(244, 4%, 36%);
+
   &:hover {
     box-shadow: 0 8px 43px rgba(0, 0, 0, 0.55);
   }
