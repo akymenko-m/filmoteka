@@ -10,7 +10,10 @@ export const createFilmCards = (films, genres) => {
     .map(
       film => `
 			<li class="film__list-element" data-id=${film.id}>
-				<img class="film__list-img" src="${getMoviePoster(BASE_URL_IMG, film.poster_path)}" alt="${film.original_title}" width='395' height='574'>
+				<img class="film__list-img" src="${getMoviePoster(
+          BASE_URL_IMG,
+          film.poster_path
+        )}" alt="${film.original_title}" width='395' height='574'>
    			<div class="film__description">
    				<h2 class='film__title'>${film.original_title}</h2>
 	   			<p class="film__title about">${getGenresName(

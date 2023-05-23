@@ -2,7 +2,6 @@
 
 import Pagination from 'tui-pagination';
 import Notiflix from 'notiflix';
-
 import { FilmsApi } from '../api';
 import { createFilmCards } from './filmCard';
 
@@ -12,6 +11,8 @@ const formEl = document.querySelector('.search-form');
 const buttonEl = document.querySelector('.search-form__button');
 const divEl = document.querySelector('.films__list');
 const inputWarning = document.querySelector('.input-warning');
+
+if (!formEl) return;
 
 const options = {
   totalItems: 1000,
@@ -23,21 +24,21 @@ const options = {
   lastItemClassName: 'tui-last-child',
   template: {
     page: '<a href="#" class="tui-page-btn">{{page}}</a>',
-    currentPage: '<strong class="tui-page-btn tui-is-selected">{{page}}</strong>',
+    currentPage:
+      '<strong class="tui-page-btn tui-is-selected">{{page}}</strong>',
     moveButton:
       '<a href="#" class="tui-page-btn tui-{{type}}">' +
-        '<span class="tui-ico-{{type}}"></span>' +
+      '<span class="tui-ico-{{type}}"></span>' +
       '</a>',
     disabledMoveButton:
       '<span class="tui-page-btn tui-is-disabled tui-{{type}}">' +
-        '<span class="tui-ico-{{type}}"></span>' +
+      '<span class="tui-ico-{{type}}"></span>' +
       '</span>',
     moreButton:
       '<a href="#" class="tui-page-btn tui-{{type}}-is-ellip">' +
-        '<span class="tui-ico-ellip">...</span>' +
-      '</a>'
-    
-  }
+      '<span class="tui-ico-ellip">...</span>' +
+      '</a>',
+  },
 };
 
 const pagination = new Pagination('pagination', options);
@@ -54,16 +55,21 @@ try {
 
 async function loadPopular() {
   try {
-    Notiflix.Loading.circle({svgColor: '#ff6b01a1'});
+    Notiflix.Loading.circle({ svgColor: '#ff6b01a1' });
     const popularMovies = await filmsApi
       .fetchTrendingFilms()
-      .then(({ data }) => { pagination.setTotalItems(data.total_pages); return data.results });
+      .then(({ data }) => {
+        pagination.setTotalItems(data.total_pages);
+        return data.results;
+      });
     const genres = await filmsApi.fetchGenres().then(({ data }) => data.genres);
     filmsApi.page = 1;
 
-    document.querySelector('.tui-page-btn.tui-next').textContent = `${pagination._getLastPage()}`;
-    document.querySelector('.tui-page-btn.tui-prev').textContent = `1`; 
-    
+    document.querySelector(
+      '.tui-page-btn.tui-next'
+    ).textContent = `${pagination._getLastPage()}`;
+    document.querySelector('.tui-page-btn.tui-prev').textContent = `1`;
+
     createFilmCards(popularMovies, genres);
     Notiflix.Loading.remove();
     paginationEl.classList.remove('is-none');
@@ -74,7 +80,7 @@ async function loadPopular() {
 
 async function loadQuery() {
   try {
-    Notiflix.Loading.circle({svgColor: '#ff6b01a1'});
+    Notiflix.Loading.circle({ svgColor: '#ff6b01a1' });
     const genres = await filmsApi.fetchGenres().then(({ data }) => data.genres);
     const queryMovies = await filmsApi
       .fetchFilmsByQuery()
@@ -83,24 +89,27 @@ async function loadQuery() {
           inputWarning.classList.remove('is-none');
           Notiflix.Loading.remove();
           return;
-          
         }
         pagination.setTotalItems(data.total_pages);
-        
+
         divEl.innerHTML = '';
         return data.results;
       })
       .finally((buttonEl.disabled = false));
-    
+
     filmsApi.page = 1;
-    if (!queryMovies) { filmsApi.query = ''; return } else {
+    if (!queryMovies) {
+      filmsApi.query = '';
+      return;
+    } else {
       createFilmCards(queryMovies, genres);
     }
-    
 
-    document.querySelector('.tui-page-btn.tui-next').textContent = `${pagination._getLastPage()}`;
-    document.querySelector('.tui-page-btn.tui-prev').textContent = `1`;  
-    
+    document.querySelector(
+      '.tui-page-btn.tui-next'
+    ).textContent = `${pagination._getLastPage()}`;
+    document.querySelector('.tui-page-btn.tui-prev').textContent = `1`;
+
     if (Number(pagination._getLastPage()) === 1) {
       paginationEl.classList.add('is-none');
     } else {
@@ -119,14 +128,13 @@ function onSearchFormSubmit(event) {
   buttonEl.disabled = true;
   inputWarning.classList.add('is-none');
 
-  
   filmsApi.query = event.target.elements[0].value.trim();
   filmsApi.page = 1;
 
   if (!filmsApi.query) {
     return;
   }
-  
+
   loadQuery();
   event.currentTarget.reset();
 }
@@ -144,27 +152,36 @@ export function getGenresName(allGenres, genreIds) {
     return acc;
   }, []);
 
-  return genresName.length > 2 ? genresName.slice(0, 2).join(', ')+', Other' : genresName.join(', ');
+  return genresName.length > 2
+    ? genresName.slice(0, 2).join(', ') + ', Other'
+    : genresName.join(', ');
 }
 
-
-  pagination.on('afterMove', ({ page }) => {
+pagination.on('afterMove', ({ page }) => {
   divEl.innerHTML = '';
   filmsApi.page = page;
-  
+
   const prevButtonEl = document.querySelector('.tui-page-btn.tui-prev');
   const nextButtonEl = document.querySelector('.tui-page-btn.tui-next');
-    
+
   if (page === 2 || page === 3) {
     prevButtonEl.classList.add('is-none');
-  } else { prevButtonEl.classList.remove('is-none') };
+  } else {
+    prevButtonEl.classList.remove('is-none');
+  }
 
-  if (page === Number(pagination._getLastPage()) - 1 || page === Number(pagination._getLastPage()) - 2) {
-    nextButtonEl.classList.add('is-none')
-  } else {nextButtonEl.classList.remove('is-none') };
+  if (
+    page === Number(pagination._getLastPage()) - 1 ||
+    page === Number(pagination._getLastPage()) - 2
+  ) {
+    nextButtonEl.classList.add('is-none');
+  } else {
+    nextButtonEl.classList.remove('is-none');
+  }
 
   if (!filmsApi.query) {
-    loadPopular()
-  } else { loadQuery()}
-  });
-
+    loadPopular();
+  } else {
+    loadQuery();
+  }
+});

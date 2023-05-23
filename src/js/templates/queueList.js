@@ -2,18 +2,14 @@
 import Notiflix from 'notiflix';
 import localStorageService from '../localstorage';
 import { getYear } from './apiMainPage';
-import { getGenresName } from './apiMainPage';
-import createFilmCards from './filmCard';
+
 const btnWatched = document.querySelector('.js-btn-watched');
 const btnQueue = document.querySelector('.js-btn-queue');
 const watchedList = document.querySelector('.watched__list');
 const queueList = document.querySelector('.queue__list');
-const addToWatchedBtn = document.querySelector('button[data-modal-watched]');
-const addToQueueBtn = document.querySelector('button[data-modal-queue]');
 const STORAGE_WATCHED = 'user-watched-list';
 const STORAGE_QUEUE = 'user-queue-list';
-
-const savedWathed = localStorageService.load(STORAGE_WATCHED); 
+const savedWathed = localStorageService.load(STORAGE_WATCHED);
 const savedQueue = localStorageService.load(STORAGE_QUEUE);
 
 try {
@@ -35,6 +31,7 @@ try {
 }
 
 function createWatchedList() {
+  Notiflix.Loading.circle({ svgColor: '#ff6b01a1' });
   queueList.innerHTML = '';
   if (savedWathed) {
     btnQueue.classList.remove('btn-header-active');
@@ -44,6 +41,8 @@ function createWatchedList() {
       'beforeend',
       createMarkapFromStoradge(savedWathed)
     );
+
+    Notiflix.Loading.remove();
   } else {
     const info = `<span class='vote'>You don't add any film to Wathed</span>`;
     watchedList.innerHTML = info;
@@ -51,6 +50,7 @@ function createWatchedList() {
 }
 
 function createQueueList() {
+  Notiflix.Loading.circle({ svgColor: '#ff6b01a1' });
   watchedList.innerHTML = '';
   if (savedQueue) {
     btnQueue.classList.add('btn-header-active');
@@ -59,6 +59,8 @@ function createQueueList() {
       'beforeend',
       createMarkapFromStoradge(savedQueue)
     );
+
+    Notiflix.Loading.remove();
   } else {
     const info = `<span class='vote'>You don't add any film to Queue</span>`;
     queueList.innerHTML = info;

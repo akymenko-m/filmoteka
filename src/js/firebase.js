@@ -3,15 +3,11 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import localstorage from './localstorage';
 import jwt_decode from 'jwt-decode';
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import { toggleModal } from './templates/loginForm';
-
 import { toggleModal } from './templates/loginForm';
 
 const googleBtnEl = document.querySelector('#google-btn');
 const loginBtnEl = document.querySelector('#login-btn');
 const userInfoContainer = document.querySelector('.user-info');
-
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -40,12 +36,9 @@ async function getUserData(event) {
       const user = jwt_decode(result.user.accessToken);
       localstorage.save('user', user);
 
-      //location.reload();
-      // ...
       toggleModal();
-      loginBtnEl.textContent = "LOGOUT";
+      loginBtnEl.textContent = 'LOGOUT';
       renderUserData();
-
     })
     .catch(error => {
       // Handle Errors here.
@@ -59,7 +52,6 @@ async function getUserData(event) {
     });
 }
 
-
 export function renderUserData() {
   const { name, picture } = localstorage.load('user');
   const markup = `<img class="user-info__photo" src="${picture}"><p class="user-info__name">${name}</p>`;
@@ -67,6 +59,4 @@ export function renderUserData() {
 }
 export function clearUserData() {
   userInfoContainer.innerHTML = '';
- }
-
-
+}

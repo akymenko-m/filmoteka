@@ -63,26 +63,17 @@ export class FilmsApi {
   }
 
   getInfoByOneFilm(id) {
-    // return fetch(`${FilmsApi.BASE_URL}movie/${id}?api_key=${FilmsApi.API_KEY}`)
-    //   .then(response => {
-    //     // console.log(response.json());
-    //     return response.json();
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
     return axios.get(
       `${FilmsApi.BASE_URL}movie/${id}?api_key=${FilmsApi.API_KEY}`
     );
   }
 
   async fetchTrailer(id) {
-    // spinner?
     const responce = await fetch(
       `${FilmsApi.BASE_URL}/movie/${id}/videos?api_key=${FilmsApi.API_KEY}`
     );
     const data = await responce.json();
-    // spinner?
+
     return data;
   }
 }

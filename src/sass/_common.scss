@@ -1,9 +1,10 @@
 @import '~node_modules/modern-normalize/modern-normalize.css';
 body {
-    font-family: 'Roboto', sans-serif;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 12px;
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  cursor: url(../images/cursor-body.png), auto;
 }
 
 html {

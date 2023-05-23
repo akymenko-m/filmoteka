@@ -8,6 +8,7 @@ const backdrop = document.querySelector('.backdrop');
 const closeBtnEl = document.querySelector('button[data-modal-close]');
 const libraryBtnEl = document.querySelector('#library-btn');
 
+if (!loginBtnEl) return;
 loginBtnEl.addEventListener('click', onLoginBtnClick);
 
 if (localstorage.load('user')) {
@@ -16,24 +17,23 @@ if (localstorage.load('user')) {
 }
 
 (function checkAutorization() {
+  libraryBtnEl.addEventListener('click', event => {
+    const savedUser = localstorage.load('user');
 
-    libraryBtnEl.addEventListener('click', event => {
-      const savedUser = localstorage.load('user');
-
-      if (!savedUser) {
-        event.preventDefault();
-        Notify.failure('You should login to access the library', {
-          timeout: 1000,
-        });
-        return;
-      }
-    });
+    if (!savedUser) {
+      event.preventDefault();
+      Notify.failure('You should login to access the library', {
+        timeout: 1000,
+      });
+      return;
+    }
+  });
 })();
 
 function onLoginBtnClick() {
   if (localstorage.load('user')) {
     localstorage.remove('user');
-    //window.location.href = './index.html';
+
     loginBtnEl.textContent = 'LOGIN';
     clearUserData();
     return;
